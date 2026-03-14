@@ -2,12 +2,13 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Một lời mời nhỏ</title>
 
     <style>
       body {
         margin: 0;
-        height: 100vh;
+        min-height: 100vh;
         font-family: "Segoe UI", sans-serif;
         display: flex;
         justify-content: center;
@@ -16,12 +17,12 @@
         background-size: cover;
         background-position: center;
         color: white;
-        overflow: hidden;
+        padding: 20px;
       }
 
       .overlay {
         background: rgba(0, 0, 0, 0.55);
-        position: absolute;
+        position: fixed;
         width: 100%;
         height: 100%;
         top: 0;
@@ -30,39 +31,52 @@
 
       .card {
         position: relative;
-        width: 520px;
-        height: 560px;
-        padding: 40px;
+        width: 100%;
+        max-width: 520px;
+
+        padding: 32px;
         border-radius: 18px;
-        background: rgba(0, 0, 0, 0.6);
+
+        background: rgba(0, 0, 0, 0.65);
         backdrop-filter: blur(6px);
+
         text-align: center;
         z-index: 2;
 
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 20px;
+      }
+
+      h2 {
+        margin-top: 0;
       }
 
       #text {
-        font-size: 20px;
-        line-height: 1.8;
+        font-size: 18px;
+        line-height: 1.7;
         min-height: 140px;
       }
 
       .buttons {
         position: relative;
+
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 16px;
+        flex-wrap: wrap;
       }
 
       button {
-        padding: 12px 24px;
-        font-size: 17px;
+        padding: 12px 22px;
+        font-size: 16px;
+
         border: none;
-        border-radius: 30px;
+        border-radius: 28px;
+
         cursor: pointer;
+
+        transition: 0.25s;
       }
 
       .accept {
@@ -70,19 +84,28 @@
         color: white;
       }
 
+      .accept:hover {
+        transform: scale(1.05);
+      }
+
       .decline {
         background: #ddd;
         color: #333;
+
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
       }
 
       .success {
         display: none;
-        font-size: 20px;
+        font-size: 18px;
         margin-top: 10px;
+
         color: #ffd6d6;
+      }
+
+      .note {
+        font-size: 14px;
+        opacity: 0.8;
       }
 
       .confetti {
@@ -97,6 +120,19 @@
         }
         100% {
           transform: translateY(100vh);
+        }
+      }
+
+      /* Mobile adjustments */
+
+      @media (max-width: 480px) {
+        #text {
+          font-size: 16px;
+        }
+
+        button {
+          font-size: 15px;
+          padding: 10px 18px;
         }
       }
     </style>
@@ -114,6 +150,7 @@
         <button class="accept" onclick="acceptInvite()">
           Nghe cũng hay đó
         </button>
+
         <button class="decline" id="declineBtn">Để em suy nghĩ</button>
       </div>
 
@@ -124,60 +161,77 @@
 
     <script>
       const lines = [
-        "Ngày mai nếu em rảnh...",
+        "Cuối tuần này nếu em rảnh...",
         "Anh muốn mời em ghé Công viên Grand Park một chút.",
+        "",
         "Chỉ đơn giản là:",
         "🎮 Chơi vài trò nhỏ",
-        "🌿 Đi dạo nói chuyện cho thoải mái",
+        "🌿 Đi dạo nói chuyện",
         "🍽️ Nếu tiện thì ăn tối nhẹ",
         "",
-        "Không phải kế hoạch gì lớn...",
         "Chỉ là một buổi đi dạo thư giãn thôi.",
         "",
         "Không biết em có muốn tham gia không?",
       ];
 
       let i = 0;
-      let textDiv = document.getElementById("text");
+      const textDiv = document.getElementById("text");
 
       function typeLine() {
         if (i < lines.length) {
           let line = lines[i];
           let char = 0;
-          let temp = "";
 
           let interval = setInterval(() => {
-            temp += line.charAt(char);
             textDiv.innerHTML += line.charAt(char);
-
             char++;
 
             if (char >= line.length) {
               clearInterval(interval);
+
               textDiv.innerHTML += "<br>";
+
               i++;
-              setTimeout(typeLine, 500);
+
+              setTimeout(typeLine, 450);
             }
-          }, 35);
+          }, 30);
         }
       }
 
       typeLine();
 
       const declineBtn = document.getElementById("declineBtn");
+      const card = document.querySelector(".card");
 
-      declineBtn.addEventListener("mouseover", () => {
-        const x = Math.random() * window.innerWidth * 0.7;
-        const y = Math.random() * window.innerHeight * 0.7;
+      let tapCount = 0;
+
+      declineBtn.addEventListener("click", moveButton);
+
+      function moveButton() {
+        tapCount++;
+
+        const rect = card.getBoundingClientRect();
+
+        const x = Math.random() * (rect.width - 120);
+        const y = Math.random() * (rect.height - 120);
 
         declineBtn.style.left = x + "px";
         declineBtn.style.top = y + "px";
-      });
+
+        if (tapCount > 3) {
+          declineBtn.style.transform = "scale(0.85)";
+        }
+
+        if (tapCount > 6) {
+          declineBtn.innerText = "😅 khó quá";
+        }
+      }
 
       function acceptInvite() {
         document.getElementById("success").style.display = "block";
 
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 35; i++) {
           let conf = document.createElement("div");
           conf.className = "confetti";
           conf.innerHTML = "🎉";
