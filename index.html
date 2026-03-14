@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Một lời mời nhỏ</title>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url("https://static.vinwonders.com/production/2025/07/vui-choi-vinwonders-cua-hoi.jpg");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        overflow: hidden;
+      }
+
+      .overlay {
+        background: rgba(0, 0, 0, 0.55);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .card {
+        position: relative;
+        width: 520px;
+        height: 560px;
+        padding: 40px;
+        border-radius: 18px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        z-index: 2;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      #text {
+        font-size: 20px;
+        line-height: 1.8;
+        min-height: 140px;
+      }
+
+      .buttons {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 17px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+      }
+
+      .accept {
+        background: #ff5c7c;
+        color: white;
+      }
+
+      .decline {
+        background: #ddd;
+        color: #333;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .success {
+        display: none;
+        font-size: 20px;
+        margin-top: 10px;
+        color: #ffd6d6;
+      }
+
+      .confetti {
+        position: absolute;
+        font-size: 20px;
+        animation: fall 3s linear forwards;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(-50px);
+        }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+
+    <div class="card">
+      <h2>🌿 Một lời mời nhỏ</h2>
+
+      <div id="text"></div>
+
+      <div class="buttons">
+        <button class="accept" onclick="acceptInvite()">
+          Nghe cũng hay đó
+        </button>
+        <button class="decline" id="declineBtn">Để em suy nghĩ</button>
+      </div>
+
+      <div class="success" id="success">
+        🎉 Vậy anh sẽ chuẩn bị một buổi đi dạo thật chill nhé.
+      </div>
+    </div>
+
+    <script>
+      const lines = [
+        "Ngày mai nếu em rảnh...",
+        "Anh muốn mời em ghé Công viên Grand Park một chút.",
+        "Chỉ đơn giản là:",
+        "🎮 Chơi vài trò nhỏ",
+        "🌿 Đi dạo nói chuyện cho thoải mái",
+        "🍽️ Nếu tiện thì ăn tối nhẹ",
+        "",
+        "Không phải kế hoạch gì lớn...",
+        "Chỉ là một buổi đi dạo thư giãn thôi.",
+        "",
+        "Không biết em có muốn tham gia không?",
+      ];
+
+      let i = 0;
+      let textDiv = document.getElementById("text");
+
+      function typeLine() {
+        if (i < lines.length) {
+          let line = lines[i];
+          let char = 0;
+          let temp = "";
+
+          let interval = setInterval(() => {
+            temp += line.charAt(char);
+            textDiv.innerHTML += line.charAt(char);
+
+            char++;
+
+            if (char >= line.length) {
+              clearInterval(interval);
+              textDiv.innerHTML += "<br>";
+              i++;
+              setTimeout(typeLine, 500);
+            }
+          }, 35);
+        }
+      }
+
+      typeLine();
+
+      const declineBtn = document.getElementById("declineBtn");
+
+      declineBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * window.innerWidth * 0.7;
+        const y = Math.random() * window.innerHeight * 0.7;
+
+        declineBtn.style.left = x + "px";
+        declineBtn.style.top = y + "px";
+      });
+
+      function acceptInvite() {
+        document.getElementById("success").style.display = "block";
+
+        for (let i = 0; i < 40; i++) {
+          let conf = document.createElement("div");
+          conf.className = "confetti";
+          conf.innerHTML = "🎉";
+
+          conf.style.left = Math.random() * window.innerWidth + "px";
+
+          document.body.appendChild(conf);
+
+          setTimeout(() => conf.remove(), 3000);
+        }
+      }
+    </script>
+  </body>
+</html>
