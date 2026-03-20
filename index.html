@@ -3,10 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Một lời mời nhỏ</title>
+    <title>Date Unlock</title>
 
     <style>
       body {
+        /* font-family: Arial, sans-serif;
+        background: url("https://images.unsplash.com/photo-1501785888041-af3ef285b470")
+          no-repeat center/cover; */
         margin: 0;
         min-height: 100vh;
         font-family: "Segoe UI", sans-serif;
@@ -16,232 +19,179 @@
         background-image: url("https://static.vinwonders.com/production/2025/07/vui-choi-vinwonders-cua-hoi.jpg");
         background-size: cover;
         background-position: center;
-        color: white;
+        /* color: white; */
         padding: 20px;
       }
 
       .overlay {
-        background: rgba(0, 0, 0, 0.55);
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-
-      .card {
-        position: relative;
-        width: 100%;
-        max-width: 520px;
-
-        padding: 32px;
-        border-radius: 18px;
-
-        background: rgba(0, 0, 0, 0.65);
-        backdrop-filter: blur(6px);
-
+        background: rgba(255, 255, 255, 0.95);
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 20px;
         text-align: center;
-        z-index: 2;
-
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
       }
 
-      h2 {
-        margin-top: 0;
+      h1 {
+        margin-bottom: 10px;
       }
 
-      #text {
-        font-size: 18px;
-        line-height: 1.7;
-        min-height: 140px;
+      /* Progress bar */
+      .progress {
+        height: 8px;
+        background: #eee;
+        border-radius: 10px;
+        margin: 15px 0 25px;
+        overflow: hidden;
       }
 
-      .buttons {
-        position: relative;
-
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        flex-wrap: wrap;
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ff7eb3, #ff758c);
+        transition: 0.5s;
       }
 
-      button {
-        padding: 12px 22px;
-        font-size: 16px;
-
-        border: none;
-        border-radius: 28px;
-
+      .step {
+        background: #f5f5f5;
+        margin: 12px 0;
+        padding: 15px;
+        border-radius: 12px;
         cursor: pointer;
-
-        transition: 0.25s;
+        transition: 0.3s;
       }
 
-      .accept {
-        background: #ff5c7c;
+      .step.locked {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .content {
+        display: none;
+        margin-top: 10px;
+      }
+
+      .done {
+        background: #ffe6ec;
+      }
+
+      .final {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        margin: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .agree {
+        background: #ff758c;
         color: white;
       }
 
-      .accept:hover {
-        transform: scale(1.05);
-      }
-
-      .decline {
-        background: #ddd;
-        color: #333;
-
+      .deny {
+        background: #999;
+        color: white;
         position: absolute;
       }
 
-      .success {
-        display: none;
-        font-size: 18px;
-        margin-top: 10px;
-
-        color: #ffd6d6;
-      }
-
-      .note {
-        font-size: 14px;
-        opacity: 0.8;
-      }
-
-      .confetti {
-        position: absolute;
-        font-size: 20px;
-        animation: fall 3s linear forwards;
-      }
-
-      @keyframes fall {
-        0% {
-          transform: translateY(-50px);
-        }
-        100% {
-          transform: translateY(100vh);
-        }
-      }
-
-      /* Mobile adjustments */
-
-      @media (max-width: 480px) {
-        #text {
-          font-size: 16px;
-        }
-
-        button {
-          font-size: 15px;
-          padding: 10px 18px;
-        }
+      .result {
+        margin-top: 20px;
+        font-style: italic;
       }
     </style>
   </head>
 
   <body>
-    <div class="overlay"></div>
+    <div class="overlay">
+      <h1>Unlock kế hoạch này nhé?</h1>
 
-    <div class="card">
-      <h2>🌿 Một lời mời nhỏ nè <bold style="color: #ff5c7c;">Nuna</bold></h2>
-
-      <div id="text"></div>
-
-      <div class="buttons">
-        <button class="accept" onclick="acceptInvite()">
-          Nghe cũng hay đó
-        </button>
-
-        <button class="decline" id="declineBtn">Để em suy nghĩ</button>
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
       </div>
 
-      <div class="success" id="success">
-        🎉 Vậy anh sẽ chuẩn bị một buổi đi dạo thật chill nhé.
+      <!-- Steps -->
+      <div class="step" onclick="unlock(0)">
+        🎬 14:00 - 16:00
+        <div class="content">
+          “Chiều mình bắt đầu nhẹ nhàng ở Vincom Plaza Lê Văn Việt, xem một bộ phim mà em thích nhất...”
+        </div>
       </div>
+
+      <div class="step locked" onclick="unlock(1)">
+        🌿 17:00 - 18:30
+        <div class="content">
+          “Xem xong thì qua Grand Park, chơi vài game ngoài trời...”
+        </div>
+      </div>
+
+      <div class="step locked" onclick="unlock(2)">
+        🍽️ 18:30 - 20:00
+        <div class="content">
+          “Tối thì mình ghé Vincom Mega Mall ăn gì đó… đồ ăn có thể không đặc
+          biệt, nhưng câu chuyện thì hy vọng là không muốn dừng lại.”
+        </div>
+      </div>
+
+      <div class="step locked" onclick="unlock(3)">
+        🌃 20:00 - 22:00
+        <div class="content">
+          “Ăn xong thì đi dạo công viên một chút… nếu hôm đó ổn, thì mình cứ đi
+          chậm lại để tối đừng kết thúc sớm quá.”
+        </div>
+      </div>
+
+      <!-- Final -->
+      <div class="final" id="finalBox">
+        <h3>👉 “Thật ra kế hoạch không quan trọng…”</h3>
+        <p>“…quan trọng là em có đi cùng không.” 😏</p>
+
+        <button class="btn agree" onclick="accept()">Em đồng ý 💖</button>
+        <button class="btn deny" id="denyBtn">Để em suy nghĩ 🤔</button>
+      </div>
+
+      <div class="result" id="result"></div>
     </div>
 
     <script>
-      const lines = [
-        "Ngày mai nếu em rảnh...",
-        "Anh muốn mời em ghé Công viên Grand Park một chút.",
-        "",
-        "Chỉ đơn giản là:",
-        "🎮 Chơi vài trò nhỏ",
-        "🌿 Đi dạo nói chuyện",
-        "🍽️ Nếu tiện thì ăn tối nhẹ",
-        "",
-        "Chỉ là một buổi đi dạo thư giãn thôi.",
-        "",
-        "Không biết em có muốn tham gia không?",
-      ];
+      const steps = document.querySelectorAll(".step");
+      const progress = document.getElementById("progressBar");
 
-      let i = 0;
-      const textDiv = document.getElementById("text");
+      function unlock(index) {
+        if (steps[index].classList.contains("locked")) return;
 
-      function typeLine() {
-        if (i < lines.length) {
-          let line = lines[i];
-          let char = 0;
+        const content = steps[index].querySelector(".content");
+        content.style.display = "block";
+        steps[index].classList.add("done");
 
-          let interval = setInterval(() => {
-            textDiv.innerHTML += line.charAt(char);
-            char++;
+        let percent = ((index + 1) / steps.length) * 100;
+        progress.style.width = percent + "%";
 
-            if (char >= line.length) {
-              clearInterval(interval);
-
-              textDiv.innerHTML += "<br>";
-
-              i++;
-
-              setTimeout(typeLine, 450);
-            }
-          }, 30);
+        if (index + 1 < steps.length) {
+          steps[index + 1].classList.remove("locked");
+        } else {
+          document.getElementById("finalBox").style.display = "block";
         }
       }
 
-      typeLine();
+      // Nút chạy trốn
+      const denyBtn = document.getElementById("denyBtn");
 
-      const declineBtn = document.getElementById("declineBtn");
-      const card = document.querySelector(".card");
+      denyBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+        denyBtn.style.left = x + "px";
+        denyBtn.style.top = y + "px";
+      });
 
-      let tapCount = 0;
-
-      declineBtn.addEventListener("click", moveButton);
-
-      function moveButton() {
-        tapCount++;
-
-        const rect = card.getBoundingClientRect();
-
-        const x = Math.random() * (rect.width - 120);
-        const y = Math.random() * (rect.height - 120);
-
-        declineBtn.style.left = x + "px";
-        declineBtn.style.top = y + "px";
-
-        if (tapCount > 3) {
-          declineBtn.style.transform = "scale(0.85)";
-        }
-
-        if (tapCount > 6) {
-          declineBtn.innerText = "😅 khó quá";
-        }
-      }
-
-      function acceptInvite() {
-        document.getElementById("success").style.display = "block";
-
-        for (let i = 0; i < 35; i++) {
-          let conf = document.createElement("div");
-          conf.className = "confetti";
-          conf.innerHTML = "🎉";
-
-          conf.style.left = Math.random() * window.innerWidth + "px";
-
-          document.body.appendChild(conf);
-
-          setTimeout(() => conf.remove(), 3000);
-        }
+      function accept() {
+        document.getElementById("result").innerHTML =
+          "🥰 Ok chốt rồi nha. Hôm đó anh đón 😏";
       }
     </script>
   </body>
